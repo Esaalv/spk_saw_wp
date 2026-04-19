@@ -1,0 +1,489 @@
+/* ═══════════════════════════════════════════════════════════════
+   SPK — SAW & WP  |  Combined Module Stylesheet
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Reset & Base ──────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --saw-color:     #0097a7;
+    --saw-light:     #e0f7fa;
+    --saw-dark:      #006978;
+    --saw-glow:      rgba(0,151,167,.35);
+
+    --wp-color:      #7b39c4;
+    --wp-light:      #ede7f6;
+    --wp-dark:       #5a189a;
+    --wp-glow:       rgba(123,57,196,.35);
+
+    --bg:            #eef2f7;
+    --surface:       #ffffff;
+    --border:        #e2e8f0;
+    --text-primary:  #1e293b;
+    --text-muted:    #64748b;
+    --text-light:    #94a3b8;
+
+    --radius-sm:     8px;
+    --radius-md:     14px;
+    --radius-lg:     20px;
+    --shadow-sm:     0 1px 4px rgba(0,0,0,.06);
+    --shadow-md:     0 4px 20px rgba(0,0,0,.08);
+    --shadow-lg:     0 8px 40px rgba(0,0,0,.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* ─── Hero Header ───────────────────────────────────────────── */
+
+.hero-header {
+    background: linear-gradient(135deg, #0a1628 0%, #0f2a4a 55%, #0d3b6e 100%);
+    padding: 28px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 600px 300px at 80% 50%, rgba(0,200,220,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 300px 200px at 10% 80%, rgba(123,57,196,.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* subtle animated shimmer line */
+.hero-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,200,220,.5), transparent);
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 150%; }
+}
+
+.header-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-logo {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+    flex-shrink: 0;
+}
+
+.header-text { flex: 1; }
+
+.header-text h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -.4px;
+    line-height: 1.2;
+}
+
+.header-sub {
+    font-size: 12.5px;
+    color: rgba(255,255,255,.62);
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+.header-inst {
+    font-size: 12px;
+    color: rgba(255,255,255,.45);
+    font-style: italic;
+}
+
+.header-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    border: 1px solid transparent;
+}
+
+.badge-saw { background: rgba(0,151,167,.18); color: #4dd0e1; border-color: rgba(0,188,212,.25); }
+.badge-wp  { background: rgba(123,57,196,.18); color: #ce93d8; border-color: rgba(156,39,176,.25); }
+
+/* ─── Tab Navigation ────────────────────────────────────────── */
+
+.tab-nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    position: relative;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 16px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: color .2s;
+    position: relative;
+    z-index: 1;
+    outline: none;
+}
+
+.tab-btn:hover { color: var(--text-primary); }
+
+.tab-btn.active                    { color: var(--text-primary); font-weight: 600; }
+.tab-btn[data-tab="saw"].active    { color: var(--saw-color); }
+.tab-btn[data-tab="wp"].active     { color: var(--wp-color); }
+
+.tab-badge-sm {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+    letter-spacing: .5px;
+    transition: all .3s;
+}
+
+.tab-badge-sm.saw { background: var(--saw-light); color: var(--saw-dark); }
+.tab-badge-sm.wp  { background: var(--wp-light);  color: var(--wp-dark); }
+
+.tab-btn.active .tab-badge-sm.saw  { background: var(--saw-color); color: #fff; }
+.tab-btn.active .tab-badge-sm.wp   { background: var(--wp-color);  color: #fff; }
+
+.tab-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--saw-color);
+    transition: background .35s;
+    will-change: transform, width;
+}
+
+/* ─── Main Layout ───────────────────────────────────────────── */
+
+.main-content {
+    max-width: 1000px;
+    margin: 28px auto;
+    padding: 0 28px 60px;
+}
+
+/* ─── Tab Panels ────────────────────────────────────────────── */
+
+.tab-panel        { display: none; }
+.tab-panel.active { display: block; }
+
+/* ─── Toolbar Card ──────────────────────────────────────────── */
+
+.toolbar-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 22px 28px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+}
+
+.toolbar-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .9px;
+    color: var(--text-light);
+    margin-bottom: 14px;
+}
+
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.dyn-tools {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────── */
+
+.btn, .btn-upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all .2s;
+    white-space: nowrap;
+    outline: none;
+}
+
+.btn-upload-label { background: #f1f5f9; color: var(--text-muted); border-color: var(--border); }
+.btn-upload-label:hover { background: #e2e8f0; transform: translateY(-1px); }
+
+.btn-default { background: #f1f5f9; color: var(--text-muted); border-color: var(--border); }
+.btn-default:hover { background: #e2e8f0; transform: translateY(-1px); }
+
+.btn-saw {
+    background: var(--saw-color);
+    color: #fff;
+    border-color: var(--saw-color);
+}
+.btn-saw:hover:not(:disabled) {
+    background: var(--saw-dark);
+    box-shadow: 0 5px 16px var(--saw-glow);
+    transform: translateY(-1px);
+}
+.btn-saw:disabled { background: #b2dfdb; border-color: #b2dfdb; cursor: not-allowed; }
+
+.btn-wp {
+    background: var(--wp-color);
+    color: #fff;
+    border-color: var(--wp-color);
+}
+.btn-wp:hover:not(:disabled) {
+    background: var(--wp-dark);
+    box-shadow: 0 5px 16px var(--wp-glow);
+    transform: translateY(-1px);
+}
+.btn-wp:disabled { background: #ce93d8; border-color: #ce93d8; cursor: not-allowed; }
+
+.btn-add  { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+.btn-add:hover  { background: #dcfce7; transform: translateY(-1px); }
+
+.btn-warn { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.btn-warn:hover { background: #fef3c7; transform: translateY(-1px); }
+
+.btn-danger-soft { background: #fff1f2; color: #991b1b; border-color: #fecaca; }
+.btn-danger-soft:hover { background: #ffe4e6; transform: translateY(-1px); }
+
+/* Delete icon inside table */
+.btn-delete-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ef4444;
+    font-size: 16px;
+    padding: 3px 6px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+    line-height: 1;
+}
+.btn-delete-icon:hover { background: #fee2e2; }
+
+/* ─── Loading Bar ───────────────────────────────────────────── */
+
+.loading-container {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+}
+
+.loading-text {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.saw-text { color: var(--saw-color); }
+.wp-text  { color: var(--wp-color); }
+
+.progress-track {
+    width: 100%;
+    height: 7px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 99px;
+}
+
+.saw-fill { background: linear-gradient(90deg, #4dd0e1, var(--saw-color)); }
+.wp-fill  { background: linear-gradient(90deg, #ce93d8, var(--wp-color)); }
+
+/* ─── Table Card ────────────────────────────────────────────── */
+
+.table-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+}
+
+.placeholder-text {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 36px 0;
+    font-size: 13.5px;
+    line-height: 1.8;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th, td {
+    border: 1px solid var(--border);
+    padding: 10px 13px;
+    text-align: center;
+}
+
+th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+tr:hover > td { background: #fafbfd; }
+
+.th-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+td[contenteditable="true"] {
+    background: #fffde7;
+    outline: none;
+    cursor: text;
+}
+td[contenteditable="true"]:focus {
+    background: #fff9c4;
+    border-color: #f59e0b;
+    box-shadow: inset 0 0 0 2px rgba(245,158,11,.2);
+}
+
+select {
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    background: #fff;
+    color: var(--text-muted);
+    cursor: pointer;
+    outline: none;
+    transition: border-color .2s;
+}
+select:focus { border-color: var(--saw-color); }
+
+/* ─── Result Cards ──────────────────────────────────────────── */
+
+.results-wrapper { margin-bottom: 16px; }
+
+.result-heading {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+}
+
+.step-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    border-left-width: 5px;
+    border-left-color: var(--border);
+    overflow-x: auto;
+    /* GSAP will animate this in */
+    opacity: 0;
+}
+
+.step-card.saw-card { border-left-color: var(--saw-color); }
+.step-card.wp-card  { border-left-color: var(--wp-color); }
+
+.step-card h3 {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+}
+
+.step-card table { margin: 0; font-size: 12.5px; }
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .header-inner   { flex-wrap: wrap; gap: 14px; }
+    .header-badges  { flex-direction: row; }
+    .tab-btn        { font-size: 12px; padding: 14px 10px; gap: 6px; }
+    .main-content   { padding: 0 14px 40px; }
+    .toolbar-card   { padding: 16px 18px; }
+    .table-card     { padding: 16px; }
+}

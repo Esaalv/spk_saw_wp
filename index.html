@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Praktikum SPK — SAW & WP</title>
+    <meta name="description" content="Sistem Pendukung Keputusan: Metode SAW dan WP dalam satu halaman interaktif.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- GSAP (sync, so it's ready before deferred scripts run) -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <!-- XLSX -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ═══════════════════ HERO HEADER ═══════════════════ -->
+    <header class="hero-header" id="mainHeader">
+        <div class="header-inner">
+            <img src="logo.png" alt="Logo Polindra" class="header-logo" onerror="this.style.display='none'">
+            <div class="header-text">
+                <h1>Sistem Pendukung Keputusan</h1>
+                <p class="header-sub">Program Studi D4 Sistem Informasi Kota Cerdas</p>
+                <p class="header-inst">Politeknik Negeri Indramayu</p>
+            </div>
+            <div class="header-badges">
+                <span class="badge badge-saw">SAW</span>
+                <span class="badge badge-wp">WP</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════ TAB NAVIGATION ═══════════════════ -->
+    <nav class="tab-nav" id="tabNav">
+        <div class="tab-container">
+            <button class="tab-btn active" id="tab-saw" data-tab="saw" onclick="switchTab('saw')">
+                <span class="tab-badge-sm saw">SAW</span>
+                Simple Additive Weighting
+            </button>
+            <button class="tab-btn" id="tab-wp" data-tab="wp" onclick="switchTab('wp')">
+                <span class="tab-badge-sm wp">WP</span>
+                Weighted Product
+            </button>
+            <div class="tab-indicator" id="tabIndicator"></div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- ─────────── SAW PANEL ─────────── -->
+        <div id="panel-saw" class="tab-panel active">
+
+            <!-- Toolbar -->
+            <section class="toolbar-card" id="toolbar-saw">
+                <p class="toolbar-label">📥 Persiapan &amp; Modifikasi Data</p>
+                <div class="btn-group">
+                    <button class="btn btn-default" onclick="downloadTemplate('saw')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Template
+                    </button>
+                    <label class="btn btn-default btn-upload-label">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Template
+                        <input type="file" id="fileUpload-saw" accept=".xlsx, .xls" onchange="uploadTemplate(event, 'saw')" style="display:none;">
+                    </label>
+
+                    <div id="dynamicTools-saw" class="dyn-tools" style="display:none;">
+                        <button id="btnHitung-saw" class="btn btn-saw" onclick="processSAW()" disabled>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            Hitung SAW
+                        </button>
+                        <button class="btn btn-add" onclick="tambahKriteria('saw')">+ Kriteria</button>
+                        <button class="btn btn-warn" onclick="tambahAlternatif('saw')">+ Alternatif</button>
+                        <button class="btn btn-danger-soft" onclick="resetData('saw')">↺ Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Bar -->
+            <div id="loadingBarContainer-saw" class="loading-container" style="display:none;">
+                <p class="loading-text saw-text">Memproses Perhitungan SAW...</p>
+                <div class="progress-track">
+                    <div id="progressBar-saw" class="progress-fill saw-fill"></div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div id="dataTableContainer-saw" class="table-card">
+                <p class="placeholder-text">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:.3;display:block;margin:0 auto 12px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    Belum ada data. Download &amp; upload template Excel terlebih dahulu.
+                </p>
+            </div>
+
+            <!-- Results -->
+            <div id="resultContainer-saw" class="results-wrapper"></div>
+        </div>
+
+        <!-- ─────────── WP PANEL ─────────── -->
+        <div id="panel-wp" class="tab-panel">
+
+            <!-- Toolbar -->
+            <section class="toolbar-card" id="toolbar-wp">
+                <p class="toolbar-label">📥 Persiapan &amp; Modifikasi Data</p>
+                <div class="btn-group">
+                    <button class="btn btn-default" onclick="downloadTemplate('wp')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Template
+                    </button>
+                    <label class="btn btn-default btn-upload-label">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Template
+                        <input type="file" id="fileUpload-wp" accept=".xlsx, .xls" onchange="uploadTemplate(event, 'wp')" style="display:none;">
+                    </label>
+
+                    <div id="dynamicTools-wp" class="dyn-tools" style="display:none;">
+                        <button id="btnHitung-wp" class="btn btn-wp" onclick="processWP()" disabled>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            Hitung WP
+                        </button>
+                        <button class="btn btn-add" onclick="tambahKriteria('wp')">+ Kriteria</button>
+                        <button class="btn btn-warn" onclick="tambahAlternatif('wp')">+ Alternatif</button>
+                        <button class="btn btn-danger-soft" onclick="resetData('wp')">↺ Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Bar -->
+            <div id="loadingBarContainer-wp" class="loading-container" style="display:none;">
+                <p class="loading-text wp-text">Memproses Perhitungan WP...</p>
+                <div class="progress-track">
+                    <div id="progressBar-wp" class="progress-fill wp-fill"></div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div id="dataTableContainer-wp" class="table-card">
+                <p class="placeholder-text">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:.3;display:block;margin:0 auto 12px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    Belum ada data. Download &amp; upload template Excel terlebih dahulu.
+                </p>
+            </div>
+
+            <!-- Results -->
+            <div id="resultContainer-wp" class="results-wrapper"></div>
+        </div>
+
+    </main>
+
+    <!-- ═══════════════════ SCRIPTS (DEFERRED) ═══════════════════ -->
+    <script defer src="data.js"></script>
+    <script defer src="utils.js"></script>
+    <script defer src="table.js"></script>
+    <script defer src="excel.js"></script>
+    <script defer src="saw.js"></script>
+    <script defer src="wp.js"></script>
+    <script defer src="script.js"></script>
+
+</body>
+</html>
